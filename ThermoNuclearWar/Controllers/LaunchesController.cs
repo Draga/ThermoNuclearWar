@@ -19,6 +19,7 @@ namespace ThermoNuclearWar.Controllers
         private static string ThermoNuclearWarAccessPoint => "http://gitland.azurewebsites.net:80";
 
         private static string LaunchCallPath => "/api/warheads/launch";
+        private static string StatusCallPath => "/api/warheads/status";
 
         /// <summary>
         ///  Returns a copy of the original launch code cooldown timespan to avoid accidental cahnges to it. This is thermo-nuclear war afterall!
@@ -29,6 +30,26 @@ namespace ThermoNuclearWar.Controllers
         public IQueryable<Launch> GetLaunches()
         {
             return db.Launches;
+        }
+
+        // GET: api/Launches
+        public async Task<bool> GetLaunchApiStatus()
+        {
+            var response = await HttpClient.GetAsync(ThermoNuclearWarAccessPoint + StatusCallPath);
+
+            // API call unsuccesful.
+            if (!response.IsSuccessStatusCode)
+            {
+                var message = "Unable to request status";
+                var httpResponseMessage = Request.CreateErrorResponse(HttpStatusCode.ServiceUnavailable, message);
+                throw new HttpResponseException(httpResponseMessage);
+            }
+
+
+            var launchApiStatusResult = await response.Content.ReadAsAsync<LaunchApiStatusResult>();
+
+            return launchApiStatusResult.Status == LaunchApiStatusResult.Code.Online;
+
         }
 
         // GET: api/Launches/5
