@@ -17,6 +17,7 @@ namespace ThermoNuclearWar.Models
     
         public ThermoNuclearWarContext() : base("name=ThermoNuclearWarContext")
         {
+            Database.SetInitializer<ThermoNuclearWarContext>(new LaunchCodesInitializer());
         }
 
         public System.Data.Entity.DbSet<ThermoNuclearWar.Models.Launch> Launches { get; set; }

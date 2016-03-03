@@ -16,9 +16,9 @@ namespace ThermoNuclearWar.Controllers
 
         private readonly HttpClient HttpClient = new HttpClient();
 
-        private string ThermoNuclearWarAccessPoint => "http://gitland.azurewebsites.net:80";
+        private static string ThermoNuclearWarAccessPoint => "http://gitland.azurewebsites.net:80";
 
-        private string LaunchCallPath => "/api/warheads/launch";
+        private static string LaunchCallPath => "/api/warheads/launch";
 
         /// <summary>
         ///  Returns a copy of the original launch code cooldown timespan to avoid accidental cahnges to it. This is thermo-nuclear war afterall!
@@ -46,12 +46,16 @@ namespace ThermoNuclearWar.Controllers
 
         // POST: api/Launches
         [ResponseType(typeof(Launch))]
-        public async Task<IHttpActionResult> PostLaunch(LaunchCode launchCode)
+        public async Task<IHttpActionResult> PostLaunch(int launchCodeId)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+
+            // TODO: avoid multiple istances to create launches while they are being checked.
+
+            var launchCode = db.LaunchCodes.Find(launchCodeId);
 
             CheckLaunchCooldown(launchCode);
 
@@ -72,7 +76,7 @@ namespace ThermoNuclearWar.Controllers
 
             var launchApiCall = new LaunchApiCallRequest { LaunchCode = apiLaunchCode };
             var response =
-                await HttpClient.PostAsJsonAsync(this.ThermoNuclearWarAccessPoint + this.LaunchCallPath, launchApiCall);
+                await HttpClient.PostAsJsonAsync(ThermoNuclearWarAccessPoint + LaunchCallPath + "?LaunchCode=" + apiLaunchCode, apiLaunchCode );
 
             // API call unsuccesful.
             if (!response.IsSuccessStatusCode)
