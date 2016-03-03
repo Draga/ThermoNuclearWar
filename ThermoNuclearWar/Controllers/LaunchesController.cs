@@ -55,26 +55,55 @@ namespace ThermoNuclearWar.Controllers
 
             CheckLaunchCooldown(launchCode);
 
-            var launchApiCall = new LaunchApiCallRequest { LaunchCode = launchCode.Code };
-            var response = await HttpClient.PostAsJsonAsync(this.ThermoNuclearWarAccessPoint + this.LaunchCallPath, launchApiCall);
-            if (response.IsSuccessStatusCode)
+            var launch = await Launch(launchCode);
+            return Ok(launch);
+        }
+
+        /// <summary>
+        /// Asks the thermo-nuclear REST API to make a launch. Can throw various HTTP errors if unsuccesful.
+        /// </summary>
+        /// <param name="launchCode">The launch code to be used.</param>
+        /// <returns>The Launch if successful.</returns>
+        private async Task<Launch> Launch(LaunchCode launchCode)
+        {
+            // The API requires the code in the format YYMMDD-AAAAAAAAAA (where YYMMDD is 6 digits
+            // representing the current date and AAAAAAAAAA is the pass phrase given to the President)
+            var apiLaunchCode = DateTime.Now.ToString("yyMMdd") + "-" + launchCode.Code;
+
+            var launchApiCall = new LaunchApiCallRequest { LaunchCode = apiLaunchCode };
+            var response =
+                await HttpClient.PostAsJsonAsync(this.ThermoNuclearWarAccessPoint + this.LaunchCallPath, launchApiCall);
+
+            // API call unsuccesful.
+            if (!response.IsSuccessStatusCode)
             {
-                var launch = new Launch
-                {
-                    LaunchCode = launchCode,
-                    DateTime = DateTime.Now
-                };
-                db.Launches.Add(launch);
-                await db.SaveChangesAsync();
+                var message = "Unable to make a launch request";
+                var httpResponseMessage = Request.CreateErrorResponse(HttpStatusCode.ServiceUnavailable, message);
+                throw new HttpResponseException(httpResponseMessage);
             }
-            else
+
+            var launchApiCallResult = await response.Content.ReadAsAsync<LaunchApiCallResult>();
+
+            // API call return a non succesful code.
+            if (launchApiCallResult.Result != LaunchApiCallResult.Code.Success)
             {
-                
+                var message = string.Format(
+                    "Launch request returned an error:{0}{1}", Environment.NewLine,
+                    launchApiCallResult.Message);
+                var httpResponseMessage = Request.CreateErrorResponse(HttpStatusCode.ServiceUnavailable, message);
+                throw new HttpResponseException(httpResponseMessage);
             }
 
+            // Launch was successful.
+            var launch = new Launch
+            {
+                LaunchCode = launchCode,
+                DateTime = DateTime.Now
+            };
+            db.Launches.Add(launch);
+            await db.SaveChangesAsync();
 
-
-            return CreatedAtRoute("DefaultApi", new { id = launch.Id }, launch);
+            return launch;
         }
 
         /// <summary>
