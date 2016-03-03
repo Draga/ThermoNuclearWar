@@ -8,6 +8,7 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     <link href="~/Content/Cover.css" rel="stylesheet" type="text/css" />
+    <script src="~/scripts/launch.js"></script>
 </head>
 <body>
     <div class="site-wrapper">
@@ -18,9 +19,12 @@
 
                 <div class="inner cover">
                     <h1 class="cover-heading">Thermo-nuclear war</h1>
+                    
                     <p class="lead">Status</p>
                     <p class="lead">
-                        <a href="#" class="btn btn-lg btn-default">Launch</a>
+                        <a id="launch" href="#" class="btn btn-lg btn-default">Launch</a>
+                    </p>
+                    <p id="resultPlaceholder" class="lead">
                     </p>
                 </div>
 

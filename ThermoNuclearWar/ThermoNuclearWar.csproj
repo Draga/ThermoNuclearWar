@@ -142,10 +142,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Cover.css" />
     <Content Include="Global.asax" />
     <Content Include="scripts\ai.0.15.0-build58334.js" />
     <Content Include="scripts\ai.0.15.0-build58334.min.js" />
+    <Content Include="scripts\launch.js" />
     <Content Include="Web.config" />
+    <Content Include="Images\background.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -154,6 +157,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\LaunchCodesInitializer.cs" />
     <Compile Include="Models\LaunchApiCallRequest.cs" />
     <Compile Include="Models\LaunchApiCallResult.cs" />
     <Compile Include="Models\LaunchCode.cs" />
