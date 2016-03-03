@@ -27,12 +27,6 @@ namespace ThermoNuclearWar.Controllers
         private TimeSpan LaunchCodeCooldown => new TimeSpan(0, 5, 0);
 
         // GET: api/Launches
-        public IQueryable<Launch> GetLaunches()
-        {
-            return db.Launches;
-        }
-
-        // GET: api/Launches
         public async Task<bool> GetLaunchApiStatus()
         {
             var response = await HttpClient.GetAsync(ThermoNuclearWarAccessPoint + StatusCallPath);
@@ -94,8 +88,7 @@ namespace ThermoNuclearWar.Controllers
             // The API requires the code in the format YYMMDD-AAAAAAAAAA (where YYMMDD is 6 digits
             // representing the current date and AAAAAAAAAA is the pass phrase given to the President)
             var apiLaunchCode = DateTime.Now.ToString("yyMMdd") + "-" + launchCode.Code;
-
-            var launchApiCall = new LaunchApiCallRequest { LaunchCode = apiLaunchCode };
+            
             var response =
                 await HttpClient.PostAsJsonAsync(ThermoNuclearWarAccessPoint + LaunchCallPath + "?LaunchCode=" + apiLaunchCode, apiLaunchCode );
 
@@ -148,7 +141,9 @@ namespace ThermoNuclearWar.Controllers
                 if (timeBetweenLaunches < this.LaunchCodeCooldown)
                 {
                     var message = string.Format(
-                        "Launch code requires a cooldown of {0}.{1}The last use of this launch code was at {2} ({3} ago).{1}Please wait {4} ({5})",
+                        "Launch code requires a cooldown of {0}.{1}" +
+                        "The last use of this launch code was at {2} ({3} ago).{1}" +
+                        "Please wait {4} ({5})",
                         this.LaunchCodeCooldown,
                         Environment.NewLine,
                         lastLaunchCodeLaunch.DateTime,

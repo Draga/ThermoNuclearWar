@@ -159,7 +159,6 @@
     </Compile>
     <Compile Include="Models\LaunchApiStatusResult.cs" />
     <Compile Include="Models\LaunchCodesInitializer.cs" />
-    <Compile Include="Models\LaunchApiCallRequest.cs" />
     <Compile Include="Models\LaunchApiCallResult.cs" />
     <Compile Include="Models\LaunchCode.cs" />
     <Compile Include="Models\Launch.cs" />

@@ -16,9 +16,11 @@
             })
             .fail(function(data) {
                 $("#resultPlaceholder").empty();
+                var message = JSON.parse(data.responseText).Message;
+                message = message.replace(/(?:\r\n|\r|\n)/g, "<br />");
                 $("#resultPlaceholder").append("<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">" +
                     "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>" +
-                    "Launch error!<br />" + JSON.parse(data.responseText).Message + "</div>");
+                    "Launch error!<br />" + message + "</div>");
             })
             .always(function () {
                 $("#launch").removeClass("disabled");
