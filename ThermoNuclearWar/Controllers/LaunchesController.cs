@@ -16,9 +16,9 @@ namespace ThermoNuclearWar.Controllers
 
         private readonly HttpClient HttpClient = new HttpClient();
 
-        private string ThermoNuclearWarAccessPoint => "http://gitland.azurewebsites.net:80";
+        private static string ThermoNuclearWarAccessPoint => "http://gitland.azurewebsites.net:80";
 
-        private string LaunchCallPath => "/api/warheads/launch";
+        private static string LaunchCallPath => "/api/warheads/launch";
 
         /// <summary>
         ///  Returns a copy of the original launch code cooldown timespan to avoid accidental cahnges to it. This is thermo-nuclear war afterall!
