@@ -14,18 +14,16 @@ namespace ThermoNuclearWar.Controllers
     {
         private ThermoNuclearWarContext db = new ThermoNuclearWarContext();
 
-        private TimeSpan _launchCodeCooldown = new TimeSpan(0, 5, 0);
+        private readonly HttpClient HttpClient = new HttpClient();
+
+        private string ThermoNuclearWarAccessPoint => "http://gitland.azurewebsites.net:80";
+
+        private string LaunchCallPath => "/api/warheads/launch";
 
         /// <summary>
         ///  Returns a copy of the original launch code cooldown timespan to avoid accidental cahnges to it. This is thermo-nuclear war afterall!
         /// </summary>
-        private TimeSpan LaunchCodeCooldown
-        {
-            get
-            {
-                return new TimeSpan(this._launchCodeCooldown.Ticks);
-            }
-        }
+        private TimeSpan LaunchCodeCooldown => new TimeSpan(0, 5, 0);
 
         // GET: api/Launches
         public IQueryable<Launch> GetLaunches()
@@ -55,7 +53,36 @@ namespace ThermoNuclearWar.Controllers
                 return BadRequest(ModelState);
             }
 
-            // Make sure the launch code has not been used recently.
+            CheckLaunchCooldown(launchCode);
+
+            var launchApiCall = new LaunchApiCallRequest { LaunchCode = launchCode.Code };
+            var response = await HttpClient.PostAsJsonAsync(this.ThermoNuclearWarAccessPoint + this.LaunchCallPath, launchApiCall);
+            if (response.IsSuccessStatusCode)
+            {
+                var launch = new Launch
+                {
+                    LaunchCode = launchCode,
+                    DateTime = DateTime.Now
+                };
+                db.Launches.Add(launch);
+                await db.SaveChangesAsync();
+            }
+            else
+            {
+                
+            }
+
+
+
+            return CreatedAtRoute("DefaultApi", new { id = launch.Id }, launch);
+        }
+
+        /// <summary>
+        /// Make sure the launch code has not been used recently. 
+        /// </summary>
+        /// <param name="launchCode">The Launch Code to be used for this Launch.</param>
+        private void CheckLaunchCooldown(LaunchCode launchCode)
+        {
             var lastLaunchCodeLaunch = db.Launches
                 .Where(l => l.LaunchCode.Id == launchCode.Id)
                 .OrderByDescending(l => l.DateTime)
@@ -78,18 +105,6 @@ namespace ThermoNuclearWar.Controllers
                     throw new HttpResponseException(httpResponseMessage);
                 }
             }
-
-            // TODO: call launch api.
-
-            var launch = new Launch
-            {
-                LaunchCode = launchCode,
-                DateTime = DateTime.Now
-            };
-            db.Launches.Add(launch);
-            await db.SaveChangesAsync();
-
-            return CreatedAtRoute("DefaultApi", new { id = launch.Id }, launch);
         }
 
         protected override void Dispose(bool disposing)
