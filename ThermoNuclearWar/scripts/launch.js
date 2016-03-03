@@ -2,7 +2,8 @@
     checkStatusLoop();
 
     var getSelectedCodeId = function() { return 1; };
-    $("#launch").click(function() {
+    $("#launch").click(function () {
+        $("#launch").addClass("disabled");
         $.ajax({
             url: "/api/Launches?launchCodeId=" + getSelectedCodeId(),
             method: "POST"
@@ -18,6 +19,9 @@
                 $("#resultPlaceholder").append("<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">" +
                     "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>" +
                     "Launch error!<br />" + JSON.parse(data.responseText).Message + "</div>");
+            })
+            .always(function () {
+                $("#launch").removeClass("disabled");
             });
     });
 });
