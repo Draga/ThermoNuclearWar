@@ -3,7 +3,7 @@ using System.Data.Entity;
 
 namespace ThermoNuclearWar.Models
 {
-    public class LaunchCodesInitializer : DropCreateDatabaseAlways<ThermoNuclearWarContext>
+    public class LaunchCodesInitializer : DropCreateDatabaseIfModelChanges<ThermoNuclearWarContext>
     {
         protected override void Seed(ThermoNuclearWarContext context)
         {
