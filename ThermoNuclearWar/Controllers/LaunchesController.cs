@@ -69,6 +69,8 @@ namespace ThermoNuclearWar.Controllers
             }
 
             // TODO: avoid multiple istances to create launches while they are being checked.
+            // This should not be a problem at the moment since the application runs only on the president computer
+            // and there is a client side validation.
 
             var launchCode = db.LaunchCodes.Find(launchCodeId);
 

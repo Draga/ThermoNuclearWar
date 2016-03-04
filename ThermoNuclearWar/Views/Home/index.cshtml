@@ -12,29 +12,52 @@
 </head>
 <body>
 
-<div class="site-wrapper">
+    <div class="site-wrapper">
 
-    <div class="site-wrapper-inner">
+        <div class="site-wrapper-inner">
 
-        <div class="cover-container">
+            <div class="cover-container">
 
-            <div class="inner cover">
-                <h1 class="cover-heading">Thermo-nuclear war</h1>
+                <div class="inner cover">
+                    <h1 class="cover-heading">Thermo-nuclear war</h1>
 
-                <p class="lead">
-                    <span id="status" class="label label-warning">Checking status...</span>
-                <p class="lead">
-                    <a id="launch" href="#" class="btn btn-lg btn btn-primary">Launch</a>
-                </p>
-                <p id="resultPlaceholder" class="lead">
-                </p>
+                    <p class="lead">
+                        <span id="status" class="label label-warning">Checking status...</span>
+                    </p>
+
+                    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Launch</button>
+                    <div class="lead">
+                        <!-- Modal -->
+                        <div id="myModal" class="modal fade" role="dialog">
+                            <div class="modal-dialog">
+
+                                <!-- Modal content-->
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h4 class="modal-title">Thermo-nuclear launch</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Are you sure you sure you would like to launch a thermo-nuclear attach on Mercuria? Vaporising mercury in our atmosphere could not be the best idea...</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button id="launch" type="button" class="btn btn-lg btn btn-primary" data-dismiss="modal">Launch</button>
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <p id="resultPlaceholder" class="lead"></p>
+                </div>
+
             </div>
 
         </div>
 
     </div>
-
-</div>
 
 </body>
 </html>
